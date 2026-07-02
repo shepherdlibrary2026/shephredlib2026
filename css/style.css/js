@@ -1,0 +1,124 @@
+// ============================================================
+//  THE SHEPHERD'S LIBRARY — Supabase Configuration
+//  js/config.js
+//  Import this file first on every page
+// ============================================================
+
+// ── Supabase Credentials ──────────────────────────────────
+// Replace these with your actual values from:
+// Supabase Dashboard → Project Settings → API
+
+const SUPABASE_URL  = 'https://myjgaannfoqapmhitujc.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15amdhYW5uZm9xYXBtaGl0dWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5NjgxMTEsImV4cCI6MjA5ODU0NDExMX0.oIO5Hc4OFw0THc8kgXrjJxtGIzBKuvYCTYlHOkFzxxY';
+
+// ── Initialize Supabase Client ───────────────────────────
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ── App Settings ─────────────────────────────────────────
+const APP = {
+  name:     "The Shepherd's Library",
+  version:  '1.0.0',
+  baseUrl:  window.location.origin,
+
+  // Page routes
+  routes: {
+    home:      'index.html',
+    login:     'login.html',
+    signup:    'signup.html',
+    dashboard: 'dashboard.html',
+    account:   'account.html',
+  },
+
+  // Subscription limits per plan
+  limits: {
+    free: {
+      ai_queries_daily: 10,
+      notes:            50,
+      sermons:           3,
+    },
+    disciple: {
+      ai_queries_daily: -1, // unlimited
+      notes:            -1,
+      sermons:          -1,
+    },
+    pastor: {
+      ai_queries_daily: -1,
+      notes:            -1,
+      sermons:          -1,
+    },
+  },
+};
+
+// ── Utility: Redirect helper ─────────────────────────────
+function goTo(page) {
+  window.location.href = page;
+}
+
+// ── Utility: Get URL param ───────────────────────────────
+function getParam(name) {
+  return new URLSearchParams(window.location.search).get(name);
+}
+
+// ── Utility: Format date ─────────────────────────────────
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+}
+
+// ── Utility: Toast notifications ─────────────────────────
+function showToast(message, type = 'default', duration = 3500) {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  const icons = { default: '✓', error: '✕', success: '🙏', info: 'ℹ' };
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${icons[type] || '✓'}</span><span>${message}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+    toast.style.transition = 'opacity 0.3s, transform 0.3s';
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+// ── Utility: Show inline error ────────────────────────────
+function showError(elementId, message) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.textContent = message;
+  el.style.display = message ? 'block' : 'none';
+}
+
+// ── Utility: Set button loading state ────────────────────
+function setLoading(btn, loading, label = '') {
+  if (loading) {
+    btn.disabled = true;
+    btn.dataset.originalText = btn.innerHTML;
+    btn.innerHTML = `<div class="spinner"></div>${label || 'Loading…'}`;
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = btn.dataset.originalText || label;
+  }
+}
+
+// ── Utility: Get user initials ────────────────────────────
+function getInitials(name) {
+  if (!name) return '?';
+  return name.trim().split(' ')
+    .map(w => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+
+console.log(`%c✝ ${APP.name} v${APP.version}`, 'color:#8B6E3C;font-weight:bold;font-size:14px;')
