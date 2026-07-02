@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — The Shepherd's Library</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- LEFT PANEL -->
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <a href="index.html" class="nav-logo" style="justify-content:center;margin-bottom:2rem">
+        <div class="nav-logo-icon" style="width:44px;height:44px;font-size:20px">✝</div>
+        <div class="nav-logo-text" style="color:rgba(255,255,255,0.9);font-size:1rem">
+          The Shepherd's<br>Library
+        </div>
+      </a>
+
+      <div class="verse-block" style="background:rgba(255,255,255,0.06);border-left-color:var(--gold-lt);margin-bottom:2.5rem">
+        <div class="verse-text" style="color:rgba(255,255,255,0.85);font-size:1.1rem">
+          "Study to shew thyself approved unto God, a workman that needeth not to be ashamed."
+        </div>
+        <div class="verse-ref" style="color:var(--gold-lt)">2 Timothy 2:15 · KJV</div>
+      </div>
+
+      <div class="auth-features">
+        <div class="auth-feature">
+          <div class="auth-feature-icon">📖</div>
+          Full Bible — KJV, WEB, ASV & more
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">✨</div>
+          AI Bible Assistant (10 queries/day free)
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">📝</div>
+          Personal notes & verse highlights
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">🙏</div>
+          Prayer journal & daily devotional
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-right">
+    <div class="auth-box">
+
+      <div class="auth-header">
+        <h1>Create your account</h1>
+        <p>Free forever. No credit card required.</p>
+      </div>
+
+      <!-- Success state (shown after signup) -->
+      <div id="success-state" style="display:none;text-align:center;padding:2rem 0">
+        <div style="font-size:3rem;margin-bottom:1rem">🙏</div>
+        <h3 style="margin-bottom:0.5rem">Account Created!</h3>
+        <p style="color:var(--ink-3);font-size:0.88rem;margin-bottom:1.5rem">
+          Check your email <strong id="confirm-email"></strong> to confirm your account, then sign in.
+        </p>
+        <a href="login.html" class="btn btn-primary btn-full">Go to Sign In</a>
+      </div>
+
+      <!-- Signup form -->
+      <div id="signup-form-wrapper">
+
+        <!-- Error alert -->
+        <div class="alert alert-error mb-3" id="signup-error" style="display:none">
+          <span>⚠</span>
+          <span id="signup-error-msg"></span>
+        </div>
+
+        <!-- Google -->
+        <button class="btn btn-google btn-full btn-lg mb-2" id="google-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          Continue with Google
+        </button>
+
+        <div class="divider-text">or create account with email</div>
+
+        <form id="signup-form" novalidate>
+          <div class="grid-2 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="first-name">First name</label>
+              <input class="form-input" type="text" id="first-name" placeholder="First" autocomplete="given-name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="last-name">Last name</label>
+              <input class="form-input" type="text" id="last-name" placeholder="Last" autocomplete="family-name" required>
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label" for="email">Email address</label>
+            <input class="form-input" type="email" id="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label" for="password">Password</label>
+            <input class="form-input" type="password" id="password" placeholder="At least 6 characters" autocomplete="new-password" required minlength="6">
+            <span class="form-hint">Minimum 6 characters</span>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="form-label" for="user-type">I am a…</label>
+            <select class="form-input form-select" id="user-type">
+              <option value="General Believer">General Believer</option>
+              <option value="Pastor / Minister">Pastor / Minister</option>
+              <option value="Bible Teacher">Bible Teacher</option>
+              <option value="Seminary Student">Seminary Student</option>
+              <option value="Missionary">Missionary</option>
+              <option value="New Believer">New Believer</option>
+              <option value="Seeker">Seeker / Exploring Faith</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="signup-btn">
+            Create Free Account →
+          </button>
+
+          <p style="text-align:center;font-size:0.75rem;color:var(--ink-4);margin-top:0.85rem">
+            By creating an account you agree to our
+            <a href="#" style="color:var(--gold)">Terms of Use</a> and
+            <a href="#" style="color:var(--gold)">Privacy Policy</a>
+          </p>
+        </form>
+
+        <p style="text-align:center;margin-top:1.5rem;font-size:0.85rem;color:var(--ink-3)">
+          Already have an account?
+          <a href="login.html" style="color:var(--gold);font-weight:600">Sign in</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/protect.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // Redirect if already logged in
+  await Protect.requireGuest();
+
+  // ── Google Sign Up ────────────────────────────────────
+  document.getElementById('google-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('google-btn');
+    setLoading(btn, true, 'Connecting to Google…');
+    const { error } = await Auth.signInWithGoogle();
+    if (error) {
+      setLoading(btn, false);
+      document.getElementById('signup-error-msg').textContent = Auth.friendlyError(error);
+      document.getElementById('signup-error').style.display = 'flex';
+    }
+  });
+
+  // ── Email Sign Up ─────────────────────────────────────
+  document.getElementById('signup-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const firstName = document.getElementById('first-name').value.trim();
+    const lastName  = document.getElementById('last-name').value.trim();
+    const email     = document.getElementById('email').value.trim();
+    const password  = document.getElementById('password').value;
+    const userType  = document.getElementById('user-type').value;
+    const btn       = document.getElementById('signup-btn');
+    const errorBox  = document.getElementById('signup-error');
+
+    errorBox.style.display = 'none';
+
+    // Validate
+    if (!firstName || !lastName) {
+      document.getElementById('signup-error-msg').textContent = 'Please enter your first and last name.';
+      errorBox.style.display = 'flex';
+      return;
+    }
+    if (!email) {
+      document.getElementById('signup-error-msg').textContent = 'Please enter your email address.';
+      errorBox.style.display = 'flex';
+      return;
+    }
+    if (password.length < 6) {
+      document.getElementById('signup-error-msg').textContent = 'Password must be at least 6 characters.';
+      errorBox.style.display = 'flex';
+      return;
+    }
+
+    const fullName = `${firstName} ${lastName}`.trim();
+    setLoading(btn, true, 'Creating account…');
+
+    const { error } = await Auth.signUp({ email, password, fullName, userType });
+
+    if (error) {
+      setLoading(btn, false);
+      document.getElementById('signup-error-msg').textContent = Auth.friendlyError(error);
+      errorBox.style.display = 'flex';
+      return;
+    }
+
+    // Show success state
+    document.getElementById('signup-form-wrapper').style.display = 'none';
+    document.getElementById('success-state').style.display = 'block';
+    document.getElementById('confirm-email').textContent = email;
+  });
+});
+</script>
+</body>
+</html>
