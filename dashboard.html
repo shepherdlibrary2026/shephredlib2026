@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — The Shepherd's Library</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Dashboard-specific styles */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .widget {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+    }
+    .widget-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .widget-title { font-size: 0.88rem; font-weight: 600; color: var(--ink-2); }
+    .widget-body  { padding: 1.25rem; }
+
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--border-soft);
+      cursor: pointer;
+      transition: background 0.12s;
+      border-radius: var(--r-sm);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-item:hover { background: var(--gold-pale); padding-left: 0.5rem; }
+    .activity-icon {
+      width: 32px; height: 32px;
+      background: var(--gold-pale);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .activity-title { font-size: 0.83rem; font-weight: 500; color: var(--ink-2); }
+    .activity-meta  { font-size: 0.72rem; color: var(--ink-4); margin-top: 0.1rem; }
+
+    .streak-row { display: flex; gap: 0.35rem; margin-top: 1rem; }
+    .streak-day {
+      flex: 1; aspect-ratio: 1;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.62rem; font-weight: 700;
+      color: var(--ink-4);
+    }
+    .streak-day.done  { background: var(--gold); border-color: var(--gold); color: white; }
+    .streak-day.today { border-color: var(--gold); color: var(--gold); }
+
+    .chart-bars {
+      display: flex; align-items: flex-end; gap: 0.4rem;
+      height: 140px; padding: 0.5rem 0;
+    }
+    .chart-bar {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, var(--gold-lt), var(--gold));
+      opacity: 0.7;
+      transition: opacity 0.15s;
+      min-height: 4px;
+    }
+    .chart-bar:hover { opacity: 1; }
+    .chart-labels {
+      display: flex; justify-content: space-between;
+      font-size: 0.68rem; color: var(--ink-4);
+      margin-top: 0.3rem; padding: 0 0.25rem;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .quick-action {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      transition: all 0.2s;
+      color: inherit;
+    }
+    .quick-action:hover {
+      border-color: var(--gold);
+      background: var(--gold-pale);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .quick-action-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .quick-action-label { font-size: 0.78rem; font-weight: 600; color: var(--ink-2); }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--ink-3);
+    }
+    .empty-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .empty-state p { font-size: 0.84rem; margin-bottom: 1rem; }
+
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">✝</div>
+      <div class="sidebar-logo-text">The Shepherd's<br>Library</div>
+    </a>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Study</div>
+      <a href="dashboard.html" class="nav-item active" id="nav-dashboard">
+        <span class="nav-icon">⊞</span> Dashboard
+      </a>
+      <a href="bible.html" class="nav-item" id="nav-bible">
+        <span class="nav-icon">📖</span> Bible Reader
+      </a>
+      <a href="studies.html" class="nav-item" id="nav-studies">
+        <span class="nav-icon">📚</span> Study Library
+      </a>
+      <a href="ai.html" class="nav-item" id="nav-ai">
+        <span class="nav-icon">✨</span> AI Assistant
+        <span class="nav-badge">AI</span>
+      </a>
+      <a href="devotional.html" class="nav-item" id="nav-devotional">
+        <span class="nav-icon">🌅</span> Devotional
+      </a>
+
+      <div class="nav-section-label">Ministry</div>
+      <a href="sermons.html" class="nav-item" id="nav-sermons">
+        <span class="nav-icon">🎤</span> Sermon Builder
+      </a>
+      <a href="lexicon.html" class="nav-item" id="nav-lexicon">
+        <span class="nav-icon">🔤</span> Greek & Hebrew
+      </a>
+
+      <div class="nav-section-label">Personal</div>
+      <a href="prayer.html" class="nav-item" id="nav-prayer">
+        <span class="nav-icon">🙏</span> Prayer Journal
+      </a>
+      <a href="notes.html" class="nav-item" id="nav-notes">
+        <span class="nav-icon">📝</span> My Notes
+      </a>
+      <a href="bookmarks.html" class="nav-item" id="nav-bookmarks">
+        <span class="nav-icon">🔖</span> Bookmarks
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="account.html" class="sidebar-user">
+        <div class="user-avatar" id="sidebar-avatar">CG</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Loading…</div>
+          <div class="user-plan" id="sidebar-user-plan">Free Plan</div>
+        </div>
+        <span style="color:var(--ink-4);font-size:0.8rem">›</span>
+      </a>
+      <button class="nav-item" id="sign-out-btn" style="color:var(--ink-3);font-size:0.8rem;margin-top:0.25rem">
+        <span class="nav-icon">⎋</span> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-search">
+        <span style="color:var(--ink-4)">🔍</span>
+        <input type="text" placeholder="Search Scripture, studies, topics…" id="search-input">
+      </div>
+      <div class="topbar-actions">
+        <a href="ai.html" class="icon-btn" title="AI Assistant">✨</a>
+        <button class="icon-btn" title="Notifications" id="notif-btn">🔔</button>
+        <a href="account.html" class="user-avatar" id="topbar-avatar">CG</a>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+
+      <!-- Page Header -->
+      <div style="margin-bottom:1.5rem">
+        <div class="page-eyebrow">Welcome back</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem">
+          <h2 id="greeting" style="font-size:1.5rem">Good morning 🌅</h2>
+          <div style="display:flex;gap:0.5rem">
+            <a href="ai.html"      class="btn btn-secondary btn-sm">✨ Ask AI</a>
+            <a href="sermons.html" class="btn btn-primary btn-sm">+ New Sermon</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <a href="bible.html"     class="quick-action"><div class="quick-action-icon">📖</div><div class="quick-action-label">Read Bible</div></a>
+        <a href="ai.html"        class="quick-action"><div class="quick-action-icon">✨</div><div class="quick-action-label">Ask AI</div></a>
+        <a href="sermons.html"   class="quick-action"><div class="quick-action-icon">🎤</div><div class="quick-action-label">Sermon Builder</div></a>
+        <a href="prayer.html"    class="quick-action"><div class="quick-action-icon">🙏</div><div class="quick-action-label">Prayer Journal</div></a>
+        <a href="studies.html"   class="quick-action"><div class="quick-action-icon">📚</div><div class="quick-action-label">Study Library</div></a>
+        <a href="devotional.html"class="quick-action"><div class="quick-action-icon">🌅</div><div class="quick-action-label">Devotional</div></a>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div style="font-size:1.25rem;margin-bottom:0.25rem">🔥</div>
+          <div class="stat-value" id="stat-streak">—</div>
+          <div class="stat-label">Day streak</div>
+        </div>
+        <div class="stat-card">
+          <div style="font-size:1.25rem;margin-bottom:0.25rem">📖</div>
+          <div class="stat-value" id="stat-chapters">—</div>
+          <div class="stat-label">Chapters read</div>
+        </div>
+        <div class="stat-card">
+          <div style="font-size:1.25rem;margin-bottom:0.25rem">📝</div>
+          <div class="stat-value" id="stat-notes">—</div>
+          <div class="stat-label">Notes saved</div>
+        </div>
+        <div class="stat-card">
+          <div style="font-size:1.25rem;margin-bottom:0.25rem">🙏</div>
+          <div class="stat-value" id="stat-prayers">—</div>
+          <div class="stat-label">Prayer entries</div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="grid-2" style="align-items:start">
+
+        <!-- Left Column -->
+        <div style="display:flex;flex-direction:column;gap:1.25rem">
+
+          <!-- Verse of the Day -->
+          <div class="widget">
+            <div class="widget-header">
+              <div class="widget-title">✦ Verse of the Day</div>
+              <span class="badge badge-gold" id="votd-date"></span>
+            </div>
+            <div class="widget-body">
+              <div class="verse-block">
+                <div class="verse-text" id="votd-text">Loading today's verse…</div>
+                <div class="verse-ref" id="votd-ref"></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;margin-top:1rem">
+                <button class="btn btn-secondary btn-sm" onclick="copyVerse()">📋 Copy</button>
+                <a href="ai.html" class="btn btn-secondary btn-sm">✨ Study this</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reading Streak -->
+          <div class="widget">
+            <div class="widget-header">
+              <div class="widget-title">🔥 Reading Streak</div>
+              <span style="font-size:0.78rem;color:var(--ink-3)">Last 7 days</span>
+            </div>
+            <div class="widget-body">
+              <div style="text-align:center;margin-bottom:0.75rem">
+                <div class="stat-value" id="stat-streak-display">0</div>
+                <div class="stat-label">day streak</div>
+              </div>
+              <div class="streak-row" id="streak-days">
+                <!-- Populated by dashboard.js -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column -->
+        <div style="display:flex;flex-direction:column;gap:1.25rem">
+
+          <!-- Recent Activity -->
+          <div class="widget">
+            <div class="widget-header">
+              <div class="widget-title">Recent Activity</div>
+              <a href="bible.html" class="btn btn-ghost btn-sm">View all</a>
+            </div>
+            <div class="widget-body" id="activity-list">
+              <div class="empty-state">
+                <div class="empty-icon">📖</div>
+                <p>No reading history yet.</p>
+                <a href="bible.html" class="btn btn-primary btn-sm">Start Reading</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reading Plan -->
+          <div class="widget">
+            <div class="widget-header">
+              <div class="widget-title">📅 Reading Plan</div>
+              <span class="badge badge-gold">Day 1</span>
+            </div>
+            <div class="widget-body">
+              <div style="font-size:0.88rem;font-weight:600;color:var(--ink-2);margin-bottom:0.4rem">
+                No active reading plan
+              </div>
+              <div class="progress-bar mb-2"><div class="progress-fill" style="width:0%"></div></div>
+              <a href="studies.html" class="btn btn-primary btn-sm">Choose a Reading Plan →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Weekly Chart -->
+      <div class="widget mt-3">
+        <div class="widget-header">
+          <div class="widget-title">Reading Activity</div>
+          <span style="font-size:0.76rem;color:var(--ink-3)">Chapters per day this week</span>
+        </div>
+        <div class="widget-body">
+          <div class="chart-bars" id="chart-bars">
+            <div class="chart-bar" style="height:0%"></div>
+            <div class="chart-bar" style="height:0%"></div>
+            <div class="chart-bar" style="height:0%"></div>
+            <div class="chart-bar" style="height:0%"></div>
+            <div class="chart-bar" style="height:0%"></div>
+            <div class="chart-bar" style="height:0%"></div>
+            <div class="chart-bar" style="height:0%"></div>
+          </div>
+          <div class="chart-labels">
+            <span>Mon</span><span>Tue</span><span>Wed</span>
+            <span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-content -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/protect.js"></script>
+<script src="js/dashboard.js"></script>
+<script>
+  // Set greeting based on time of day
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting').textContent = `${greeting} 🌅`;
+
+  // Set VOTD date
+  document.getElementById('votd-date').textContent =
+    new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+  // Copy verse
+  function copyVerse() {
+    const text = document.getElementById('votd-text').textContent;
+    const ref  = document.getElementById('votd-ref').textContent;
+    navigator.clipboard?.writeText(`"${text}" — ${ref}`)
+      .then(() => showToast('Verse copied to clipboard', 'success'));
+  }
+
+  // Notification button
+  document.getElementById('notif-btn').addEventListener('click', () => {
+    showToast('No new notifications', 'default');
+  });
+</script>
+</body>
+</html>
