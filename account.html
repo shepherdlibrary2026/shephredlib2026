@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings — The Shepherd's Library</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    .settings-nav {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      position: sticky;
+      top: 80px;
+    }
+    .settings-nav-item {
+      display: flex; align-items: center; gap: 0.65rem;
+      padding: 0.75rem 1.1rem;
+      font-size: 0.84rem; font-weight: 500;
+      color: var(--ink-3); cursor: pointer;
+      background: none; border: none; width: 100%;
+      text-align: left; text-decoration: none;
+      transition: all 0.14s;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .settings-nav-item:last-child { border-bottom: none; }
+    .settings-nav-item:hover { background: var(--gold-pale); color: var(--gold); }
+    .settings-nav-item.active { background: var(--gold-pale); color: var(--gold); font-weight: 600; }
+
+    .settings-panel { display: none; }
+    .settings-panel.active { display: block; }
+
+    .settings-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+    .settings-card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .settings-card-body { padding: 1.5rem; }
+    .settings-card-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      background: var(--cream-2);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .avatar-section {
+      display: flex; align-items: center; gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .avatar-large {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem; font-weight: 700; color: white;
+      flex-shrink: 0;
+    }
+    .avatar-info h4 { margin-bottom: 0.25rem; }
+    .avatar-info p  { font-size: 0.82rem; color: var(--ink-3); }
+
+    .plan-current {
+      background: var(--gold-pale);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .plan-current-left h4 { font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.2rem; }
+    .plan-current-left p  { font-size: 0.83rem; color: var(--ink-3); }
+
+    .danger-zone .settings-card { border-color: rgba(139,28,28,0.25); }
+    .danger-zone .settings-card-header { background: rgba(139,28,28,0.04); }
+    .danger-zone h4 { color: var(--error); }
+
+    .form-stack { display: flex; flex-direction: column; gap: 1.1rem; }
+
+    @media (max-width: 768px) {
+      .settings-layout { grid-template-columns: 1fr; }
+      .settings-nav { position: static; display: flex; overflow-x: auto; }
+      .settings-nav-item { border-bottom: none; border-right: 1px solid var(--border-soft); white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">✝</div>
+      <div class="sidebar-logo-text">The Shepherd's<br>Library</div>
+    </a>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Study</div>
+      <a href="dashboard.html" class="nav-item" id="nav-dashboard">
+        <span class="nav-icon">⊞</span> Dashboard
+      </a>
+      <a href="bible.html" class="nav-item" id="nav-bible">
+        <span class="nav-icon">📖</span> Bible Reader
+      </a>
+      <a href="studies.html" class="nav-item" id="nav-studies">
+        <span class="nav-icon">📚</span> Study Library
+      </a>
+      <a href="ai.html" class="nav-item" id="nav-ai">
+        <span class="nav-icon">✨</span> AI Assistant
+      </a>
+      <a href="devotional.html" class="nav-item" id="nav-devotional">
+        <span class="nav-icon">🌅</span> Devotional
+      </a>
+
+      <div class="nav-section-label">Ministry</div>
+      <a href="sermons.html" class="nav-item" id="nav-sermons">
+        <span class="nav-icon">🎤</span> Sermon Builder
+      </a>
+      <a href="lexicon.html" class="nav-item" id="nav-lexicon">
+        <span class="nav-icon">🔤</span> Greek & Hebrew
+      </a>
+
+      <div class="nav-section-label">Personal</div>
+      <a href="prayer.html" class="nav-item" id="nav-prayer">
+        <span class="nav-icon">🙏</span> Prayer Journal
+      </a>
+      <a href="notes.html" class="nav-item" id="nav-notes">
+        <span class="nav-icon">📝</span> My Notes
+      </a>
+      <a href="bookmarks.html" class="nav-item" id="nav-bookmarks">
+        <span class="nav-icon">🔖</span> Bookmarks
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="account.html" class="sidebar-user" style="background:var(--gold-pale)">
+        <div class="user-avatar" id="sidebar-avatar">CG</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Loading…</div>
+          <div class="user-plan" id="sidebar-user-plan">Free Plan</div>
+        </div>
+      </a>
+      <button class="nav-item" id="sign-out-btn" style="color:var(--ink-3);font-size:0.8rem;margin-top:0.25rem">
+        <span class="nav-icon">⎋</span> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <div class="topbar">
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-actions" style="margin-left:auto">
+        <a href="account.html" class="user-avatar" id="topbar-avatar">CG</a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <div class="page-eyebrow">Account</div>
+        <div class="page-title">Settings</div>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="settings-layout">
+
+        <!-- Settings Nav -->
+        <nav class="settings-nav">
+          <button class="settings-nav-item active" onclick="showTab('profile',this)">👤 Profile</button>
+          <button class="settings-nav-item" onclick="showTab('preferences',this)">⚙️ Preferences</button>
+          <button class="settings-nav-item" onclick="showTab('password',this)">🔒 Password</button>
+          <button class="settings-nav-item" onclick="showTab('plan',this)">⭐ Plan & Billing</button>
+          <button class="settings-nav-item" onclick="showTab('danger',this)">⚠️ Danger Zone</button>
+        </nav>
+
+        <!-- Settings Panels -->
+        <div>
+
+          <!-- PROFILE TAB -->
+          <div class="settings-panel active" id="tab-profile">
+            <div class="settings-card">
+              <div class="settings-card-header">
+                <h4>Profile Information</h4>
+              </div>
+              <div class="settings-card-body">
+                <!-- Avatar -->
+                <div class="avatar-section">
+                  <div class="avatar-large" id="profile-avatar-large">CG</div>
+                  <div class="avatar-info">
+                    <h4 id="profile-display-name">Loading…</h4>
+                    <p id="profile-email-display">—</p>
+                    <button class="btn btn-secondary btn-sm mt-1" onclick="showToast('Avatar upload coming soon','info')">
+                      Change Photo
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-stack" id="profile-form">
+                  <div class="grid-2">
+                    <div class="form-group">
+                      <label class="form-label">Full Name</label>
+                      <input class="form-input" type="text" id="full-name" placeholder="Your full name">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Display Name</label>
+                      <input class="form-input" type="text" id="display-name" placeholder="How others see you">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input class="form-input" type="email" id="email" disabled style="opacity:0.6">
+                    <span class="form-hint">Email cannot be changed here. Contact support.</span>
+                  </div>
+                  <div class="grid-2">
+                    <div class="form-group">
+                      <label class="form-label">I am a…</label>
+                      <select class="form-input form-select" id="user-type">
+                        <option>General Believer</option>
+                        <option>Pastor / Minister</option>
+                        <option>Bible Teacher</option>
+                        <option>Seminary Student</option>
+                        <option>Missionary</option>
+                        <option>New Believer</option>
+                        <option>Seeker</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Ministry / Church Name</label>
+                      <input class="form-input" type="text" id="church-name" placeholder="Optional">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Bio</label>
+                    <textarea class="form-input form-textarea" id="bio" placeholder="A short bio about yourself…" rows="3"></textarea>
+                  </div>
+                  <div class="grid-2">
+                    <div class="form-group">
+                      <label class="form-label">City</label>
+                      <input class="form-input" type="text" id="location-city" placeholder="Waukee">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">State / Country</label>
+                      <input class="form-input" type="text" id="location-state" placeholder="Iowa, USA">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-card-footer">
+                <span class="form-hint" id="profile-save-status"></span>
+                <button class="btn btn-primary" id="save-profile-btn" onclick="saveProfile()">
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PREFERENCES TAB -->
+          <div class="settings-panel" id="tab-preferences">
+            <div class="settings-card">
+              <div class="settings-card-header"><h4>Study Preferences</h4></div>
+              <div class="settings-card-body">
+                <div class="form-stack">
+                  <div class="form-group">
+                    <label class="form-label">Default Bible Translation</label>
+                    <select class="form-input form-select" id="pref-translation">
+                      <option value="KJV">King James Version (KJV)</option>
+                      <option value="WEB">World English Bible (WEB)</option>
+                      <option value="ASV">American Standard Version (ASV)</option>
+                      <option value="BBE">Bible in Basic English (BBE)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Daily Reading Goal</label>
+                    <select class="form-input form-select" id="pref-reading-goal">
+                      <option value="10">10 minutes</option>
+                      <option value="20" selected>20 minutes</option>
+                      <option value="30">30 minutes</option>
+                      <option value="60">60 minutes</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Bible Text Size</label>
+                    <select class="form-input form-select" id="pref-font-size">
+                      <option value="14">Small (14px)</option>
+                      <option value="16" selected>Medium (16px)</option>
+                      <option value="18">Large (18px)</option>
+                      <option value="20">Extra Large (20px)</option>
+                    </select>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0">
+                    <div>
+                      <div style="font-size:0.85rem;font-weight:600;color:var(--ink-2)">Dark Mode</div>
+                      <div style="font-size:0.76rem;color:var(--ink-3)">Easier on the eyes at night</div>
+                    </div>
+                    <label style="position:relative;display:inline-block;width:44px;height:24px">
+                      <input type="checkbox" id="pref-dark-mode" style="opacity:0;width:0;height:0">
+                      <span style="position:absolute;cursor:pointer;inset:0;background:var(--cream-3);border-radius:50px;transition:.3s" id="dark-toggle-track"></span>
+                    </label>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0">
+                    <div>
+                      <div style="font-size:0.85rem;font-weight:600;color:var(--ink-2)">Show in Community</div>
+                      <div style="font-size:0.76rem;color:var(--ink-3)">Let others see your profile in forums</div>
+                    </div>
+                    <input type="checkbox" id="pref-community" checked>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-card-footer">
+                <span></span>
+                <button class="btn btn-primary" onclick="savePreferences()">Save Preferences</button>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <div class="settings-card-header"><h4>Email Notifications</h4></div>
+              <div class="settings-card-body">
+                <div class="form-stack">
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;cursor:pointer">
+                    Daily devotional email
+                    <input type="checkbox" id="notif-devotional" checked>
+                  </label>
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;cursor:pointer">
+                    Prayer request support
+                    <input type="checkbox" id="notif-prayer" checked>
+                  </label>
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;cursor:pointer">
+                    New Bible studies & content
+                    <input type="checkbox" id="notif-content" checked>
+                  </label>
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;cursor:pointer">
+                    Community replies
+                    <input type="checkbox" id="notif-community">
+                  </label>
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;cursor:pointer">
+                    Marketing & announcements
+                    <input type="checkbox" id="notif-marketing" checked>
+                  </label>
+                </div>
+              </div>
+              <div class="settings-card-footer">
+                <span></span>
+                <button class="btn btn-primary" onclick="saveNotifications()">Save Preferences</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSWORD TAB -->
+          <div class="settings-panel" id="tab-password">
+            <div class="settings-card">
+              <div class="settings-card-header"><h4>Change Password</h4></div>
+              <div class="settings-card-body">
+                <div class="alert alert-info mb-3" id="password-info" style="display:none">
+                  <span>ℹ</span><span>If you signed up with Google, you may not have a password set.</span>
+                </div>
+                <div class="alert alert-error mb-3" id="password-error" style="display:none">
+                  <span>⚠</span><span id="password-error-msg"></span>
+                </div>
+                <div class="alert alert-success mb-3" id="password-success" style="display:none">
+                  <span>✓</span><span>Password updated successfully.</span>
+                </div>
+                <div class="form-stack">
+                  <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input class="form-input" type="password" id="new-password" placeholder="At least 6 characters" minlength="6">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input class="form-input" type="password" id="confirm-password" placeholder="Repeat new password">
+                  </div>
+                </div>
+              </div>
+              <div class="settings-card-footer">
+                <span></span>
+                <button class="btn btn-primary" id="password-btn" onclick="updatePassword()">Update Password</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PLAN TAB -->
+          <div class="settings-panel" id="tab-plan">
+            <div class="settings-card">
+              <div class="settings-card-header"><h4>Current Plan</h4></div>
+              <div class="settings-card-body">
+                <div class="plan-current mb-3">
+                  <div class="plan-current-left">
+                    <h4 id="plan-name">Free Plan</h4>
+                    <p id="plan-details">10 AI queries per day · 50 notes · 3 sermon templates</p>
+                  </div>
+                  <span class="badge badge-gold" id="plan-badge">FREE</span>
+                </div>
+
+                <h4 style="margin-bottom:1rem">Upgrade to unlock everything</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                  <div style="border:1.5px solid var(--border);border-radius:var(--r-lg);padding:1.25rem">
+                    <div style="font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;color:var(--gold);margin-bottom:0.4rem">DISCIPLE</div>
+                    <div style="font-family:'Lora',serif;font-size:1.75rem;font-weight:700;margin-bottom:0.25rem">$9<span style="font-size:0.9rem;font-weight:400;color:var(--ink-3)">/mo</span></div>
+                    <ul style="font-size:0.78rem;color:var(--ink-2);list-style:none;display:flex;flex-direction:column;gap:0.4rem;margin:0.75rem 0">
+                      <li>✓ Unlimited AI</li>
+                      <li>✓ All translations</li>
+                      <li>✓ Full study library</li>
+                      <li>✓ Greek & Hebrew</li>
+                    </ul>
+                    <button class="btn btn-primary btn-full btn-sm" onclick="showToast('Redirecting to checkout…','info')">
+                      Upgrade Now
+                    </button>
+                  </div>
+                  <div style="border:1.5px solid var(--gold);border-radius:var(--r-lg);padding:1.25rem;background:var(--gold-pale)">
+                    <div style="font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;color:var(--gold);margin-bottom:0.4rem">PASTOR</div>
+                    <div style="font-family:'Lora',serif;font-size:1.75rem;font-weight:700;margin-bottom:0.25rem">$24<span style="font-size:0.9rem;font-weight:400;color:var(--ink-3)">/mo</span></div>
+                    <ul style="font-size:0.78rem;color:var(--ink-2);list-style:none;display:flex;flex-direction:column;gap:0.4rem;margin:0.75rem 0">
+                      <li>✓ Everything in Disciple</li>
+                      <li>✓ Sermon Builder AI</li>
+                      <li>✓ PDF Export</li>
+                      <li>✓ Commentary access</li>
+                    </ul>
+                    <button class="btn btn-primary btn-full btn-sm" onclick="showToast('Redirecting to checkout…','info')">
+                      Start Trial
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DANGER ZONE TAB -->
+          <div class="settings-panel danger-zone" id="tab-danger">
+            <div class="settings-card">
+              <div class="settings-card-header">
+                <h4>Danger Zone</h4>
+              </div>
+              <div class="settings-card-body">
+                <p style="font-size:0.85rem;color:var(--ink-3);margin-bottom:1.5rem">
+                  These actions are permanent and cannot be undone. Please be certain before proceeding.
+                </p>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem;background:var(--cream-2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1rem">
+                  <div>
+                    <div style="font-size:0.88rem;font-weight:600;color:var(--ink-2)">Export My Data</div>
+                    <div style="font-size:0.78rem;color:var(--ink-3)">Download all your notes, highlights, and prayer journal</div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm" onclick="showToast('Data export will be emailed to you','info')">
+                    Export
+                  </button>
+                </div>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem;background:rgba(139,28,28,0.04);border:1px solid rgba(139,28,28,0.2);border-radius:var(--r)">
+                  <div>
+                    <div style="font-size:0.88rem;font-weight:600;color:var(--error)">Delete Account</div>
+                    <div style="font-size:0.78rem;color:var(--ink-3)">Permanently delete your account and all data</div>
+                  </div>
+                  <button class="btn btn-danger btn-sm" onclick="confirmDelete()">Delete Account</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /panels -->
+      </div><!-- /settings-layout -->
+    </div><!-- /page-content -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/protect.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // Require login
+  const profile = await Protect.loadUser();
+  if (!profile) return;
+
+  // Populate sidebar
+  Protect.populateSidebarUser(profile);
+
+  // Populate profile form
+  document.getElementById('full-name').value         = profile.full_name    || '';
+  document.getElementById('display-name').value      = profile.display_name || '';
+  document.getElementById('email').value             = profile.email        || '';
+  document.getElementById('church-name').value       = profile.church_name  || '';
+  document.getElementById('bio').value               = profile.bio          || '';
+  document.getElementById('location-city').value     = profile.location_city  || '';
+  document.getElementById('location-state').value    = profile.location_state || '';
+
+  if (profile.user_type) {
+    const sel = document.getElementById('user-type');
+    [...sel.options].forEach(o => { if (o.value === profile.user_type) o.selected = true; });
+  }
+
+  document.getElementById('profile-avatar-large').textContent = getInitials(profile.full_name || profile.email);
+  document.getElementById('profile-display-name').textContent = profile.full_name || profile.email;
+  document.getElementById('profile-email-display').textContent = profile.email;
+
+  // Populate preferences
+  const trans = document.getElementById('pref-translation');
+  [...trans.options].forEach(o => { if (o.value === profile.preferred_translation) o.selected = true; });
+
+  // Set plan info
+  const planMap = {
+    free:      { name: 'Free Plan',     badge: 'FREE',      details: '10 AI queries/day · 50 notes · 3 sermon templates' },
+    disciple:  { name: 'Disciple Plan', badge: 'DISCIPLE',  details: 'Unlimited AI · All translations · Greek & Hebrew' },
+    pastor:    { name: 'Pastor Plan',   badge: 'PASTOR',    details: 'Unlimited AI · Sermon Builder · PDF Export · Commentaries' },
+    church:    { name: 'Church Plan',   badge: 'CHURCH',    details: 'Up to 10 team members · Shared sermon library' },
+  };
+  const plan = planMap[profile.subscription_tier] || planMap.free;
+  document.getElementById('plan-name').textContent    = plan.name;
+  document.getElementById('plan-badge').textContent   = plan.badge;
+  document.getElementById('plan-details').textContent = plan.details;
+
+  // Open tab from URL param
+  const tab = getParam('tab');
+  if (tab) showTab(tab, document.querySelector(`.settings-nav-item[onclick*="${tab}"]`));
+
+  // Password tab: check if Google user
+  const user = window.currentUser;
+  if (user?.app_metadata?.provider === 'google') {
+    document.getElementById('password-info').style.display = 'flex';
+  }
+
+  // Mobile sidebar
+  document.getElementById('hamburger')?.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('open');
+  });
+  document.getElementById('sidebar-overlay')?.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+  });
+
+  // Sign out
+  document.getElementById('sign-out-btn').addEventListener('click', () => Auth.signOut());
+});
+
+// ── Tab switching ─────────────────────────────────────────
+function showTab(tabId, btn) {
+  document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.settings-nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId)?.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── Save Profile ──────────────────────────────────────────
+async function saveProfile() {
+  const btn    = document.getElementById('save-profile-btn');
+  const status = document.getElementById('profile-save-status');
+  const userId = window.currentUser?.id;
+  if (!userId) return;
+
+  setLoading(btn, true, 'Saving…');
+
+  const updates = {
+    full_name:      document.getElementById('full-name').value.trim(),
+    display_name:   document.getElementById('display-name').value.trim(),
+    user_type:      document.getElementById('user-type').value,
+    church_name:    document.getElementById('church-name').value.trim(),
+    bio:            document.getElementById('bio').value.trim(),
+    location_city:  document.getElementById('location-city').value.trim(),
+    location_state: document.getElementById('location-state').value.trim(),
+  };
+
+  const { error } = await Auth.updateProfile(userId, updates);
+  setLoading(btn, false);
+
+  if (error) {
+    status.textContent = '✕ ' + error.message;
+    status.style.color = 'var(--error)';
+  } else {
+    status.textContent = '✓ Changes saved';
+    status.style.color = 'var(--success)';
+    // Update display
+    document.getElementById('profile-display-name').textContent = updates.full_name || window.currentProfile?.email;
+    document.getElementById('sidebar-user-name').textContent    = updates.full_name;
+    document.getElementById('profile-avatar-large').textContent = getInitials(updates.full_name);
+    setTimeout(() => { status.textContent = ''; }, 3000);
+  }
+}
+
+// ── Save Preferences ──────────────────────────────────────
+async function savePreferences() {
+  const userId = window.currentUser?.id;
+  if (!userId) return;
+
+  const updates = {
+    preferred_translation:  document.getElementById('pref-translation').value,
+    daily_reading_goal_min: parseInt(document.getElementById('pref-reading-goal').value),
+    preferred_font_size:    parseInt(document.getElementById('pref-font-size').value),
+    show_in_community:      document.getElementById('pref-community').checked,
+  };
+
+  const { error } = await Auth.updateProfile(userId, updates);
+  showToast(error ? error.message : 'Preferences saved ✓', error ? 'error' : 'success');
+}
+
+// ── Save Notifications ────────────────────────────────────
+async function saveNotifications() {
+  const userId = window.currentUser?.id;
+  if (!userId) return;
+
+  const { error } = await db.from('notification_preferences').upsert({
+    user_id:                userId,
+    email_devotional:       document.getElementById('notif-devotional').checked,
+    email_prayer_support:   document.getElementById('notif-prayer').checked,
+    email_new_content:      document.getElementById('notif-content').checked,
+    email_community_replies:document.getElementById('notif-community').checked,
+    email_marketing:        document.getElementById('notif-marketing').checked,
+  });
+
+  showToast(error ? error.message : 'Notification preferences saved ✓', error ? 'error' : 'success');
+}
+
+// ── Update Password ───────────────────────────────────────
+async function updatePassword() {
+  const newPw  = document.getElementById('new-password').value;
+  const confPw = document.getElementById('confirm-password').value;
+  const btn    = document.getElementById('password-btn');
+
+  document.getElementById('password-error').style.display  = 'none';
+  document.getElementById('password-success').style.display = 'none';
+
+  if (!newPw || newPw.length < 6) {
+    document.getElementById('password-error-msg').textContent = 'Password must be at least 6 characters.';
+    document.getElementById('password-error').style.display = 'flex';
+    return;
+  }
+  if (newPw !== confPw) {
+    document.getElementById('password-error-msg').textContent = 'Passwords do not match.';
+    document.getElementById('password-error').style.display = 'flex';
+    return;
+  }
+
+  setLoading(btn, true, 'Updating…');
+  const { error } = await Auth.updatePassword(newPw);
+  setLoading(btn, false);
+
+  if (error) {
+    document.getElementById('password-error-msg').textContent = Auth.friendlyError(error);
+    document.getElementById('password-error').style.display = 'flex';
+  } else {
+    document.getElementById('password-success').style.display = 'flex';
+    document.getElementById('new-password').value     = '';
+    document.getElementById('confirm-password').value = '';
+  }
+}
+
+// ── Delete Account ────────────────────────────────────────
+function confirmDelete() {
+  const confirmed = confirm(
+    'Are you absolutely sure?\n\nThis will permanently delete your account, notes, highlights, prayer journal, and all personal data. This cannot be undone.'
+  );
+  if (confirmed) {
+    showToast('Account deletion requested. You will receive a confirmation email.', 'info');
+  }
+}
+</script>
+</body>
+</html>
