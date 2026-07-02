@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Shepherd's Library — Bible Study & Sermon Research</title>
+  <meta name="description" content="A comprehensive Bible study and sermon research platform for believers, pastors, and churches.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Hero ── */
+    .hero {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5rem 1.5rem;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139,110,60,0.1) 0%, transparent 70%);
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238B6E3C' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: '';
+      width: 48px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.4;
+    }
+    .hero h1 {
+      max-width: 780px;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero-desc {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1.12rem;
+      color: var(--ink-3);
+      max-width: 580px;
+      margin-bottom: 2.5rem;
+      line-height: 1.75;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+    .hero-verse-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 1.5rem 2rem;
+      max-width: 640px;
+      width: 100%;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .hero-verse-card .verse-text { font-size: 1.08rem; }
+
+    /* ── Features ── */
+    .features { padding: 5rem 1.5rem; background: var(--cream-2); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.75rem;
+      transition: all 0.2s;
+    }
+    .feature-card:hover { box-shadow: var(--shadow-lg); border-color: var(--gold); transform: translateY(-3px); }
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: var(--gold-pale);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1rem;
+    }
+    .feature-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .feature-card p  { font-size: 0.85rem; color: var(--ink-3); line-height: 1.6; }
+
+    /* ── Pricing ── */
+    .pricing { padding: 5rem 1.5rem; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-top: 3rem;
+      align-items: start;
+    }
+    .plan-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 2rem 1.75rem;
+      position: relative;
+    }
+    .plan-card.featured {
+      border-color: var(--gold);
+      background: linear-gradient(170deg, var(--white) 0%, var(--gold-pale) 100%);
+      box-shadow: var(--shadow-lg);
+    }
+    .plan-badge {
+      position: absolute; top: -1px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: white;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.25rem 1rem;
+      border-radius: 0 0 8px 8px;
+      white-space: nowrap;
+    }
+    .plan-name  { font-family: 'Cinzel', serif; font-size: 0.78rem; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 0.5rem; }
+    .plan-price { font-family: 'Lora', serif; font-size: 2.6rem; font-weight: 700; color: var(--ink); line-height: 1; margin-bottom: 0.25rem; }
+    .plan-price span { font-size: 1rem; font-weight: 400; color: var(--ink-3); }
+    .plan-period { font-size: 0.78rem; color: var(--ink-3); margin-bottom: 1.5rem; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.75rem; }
+    .plan-features li { font-size: 0.82rem; display: flex; align-items: flex-start; gap: 0.5rem; color: var(--ink-2); }
+    .plan-features li::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 0.1rem; }
+    .plan-features li.off { color: var(--ink-4); }
+    .plan-features li.off::before { content: '—'; color: var(--ink-4); }
+
+    /* ── CTA Banner ── */
+    .cta-band {
+      background: linear-gradient(135deg, var(--navy) 0%, #0F1E33 50%, var(--navy-lt) 100%);
+      padding: 5rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-band::before {
+      content: '✝';
+      position: absolute;
+      font-size: 30rem;
+      color: rgba(255,255,255,0.025);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-family: 'Cinzel', serif;
+      pointer-events: none;
+    }
+    .cta-band h2 { color: white; margin-bottom: 0.75rem; }
+    .cta-band p {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.7);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .cta-band .btn-secondary {
+      background: transparent;
+      color: rgba(255,255,255,0.85);
+      border-color: rgba(255,255,255,0.35);
+    }
+    .cta-band .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: white;
+      color: white;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--navy);
+      border-top: 1px solid rgba(184,146,62,0.2);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+    }
+    footer .footer-logo {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.65rem; margin-bottom: 1rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.88rem; color: var(--gold-lt);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+    footer .footer-links {
+      display: flex; justify-content: center;
+      gap: 1.5rem; margin: 1rem 0;
+      list-style: none;
+    }
+    footer .footer-links a {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    footer .footer-links a:hover { color: var(--gold-lt); }
+    footer small { font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">✝</div>
+      <div class="nav-logo-text">The Shepherd's<br>Library</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features" class="nav-link">Features</a></li>
+      <li><a href="#pricing" class="nav-link">Pricing</a></li>
+      <li><a href="login.html" class="nav-link">Sign In</a></li>
+      <li><a href="signup.html" class="btn btn-primary btn-sm">Start Free</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">The Shepherd's Library</div>
+    <h1>Study Scripture Deeper.<br><em>Preach</em> With Confidence.</h1>
+    <p class="hero-desc">The complete Bible study and sermon research platform for believers, pastors, and churches — powered by AI, grounded in Scripture.</p>
+    <div class="hero-actions">
+      <a href="signup.html" class="btn btn-primary btn-lg">📖 Start Studying Free</a>
+      <a href="login.html"  class="btn btn-secondary btn-lg">Sign In</a>
+    </div>
+    <div class="hero-verse-card">
+      <div class="verse-block">
+        <div class="verse-text">"Study to shew thyself approved unto God, a workman that needeth not to be ashamed, rightly dividing the word of truth."</div>
+        <div class="verse-ref">2 Timothy 2:15 · King James Version</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="container">
+      <div style="text-align:center">
+        <div class="section-eyebrow">Everything You Need</div>
+        <h2>Built for Serious Bible Students</h2>
+        <p class="t-muted mt-2" style="font-family:'Lora',serif;font-style:italic;font-size:1.05rem">From daily devotions to doctoral-level research — one platform, every tool.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📖</div>
+          <h3>Full Bible Reader</h3>
+          <p>KJV, WEB, ASV & more. Highlight, bookmark, add personal notes, cross-references, parallel view, and audio support.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3>AI Bible Assistant</h3>
+          <p>Ask any biblical question. Get Scripture-grounded answers with verse citations, historical context, and theological insight.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎤</div>
+          <h3>Sermon Builder</h3>
+          <p>AI-powered expository, topical, and textual sermon outlines with Greek/Hebrew insights, illustrations, and one-click export.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3>Study Library</h3>
+          <p>Hundreds of organized Bible lessons covering every major topic, doctrine, book, and life application area.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔤</div>
+          <h3>Greek & Hebrew Tools</h3>
+          <p>Strong's concordance, lexicon entries, word studies, morphology, and original language insights built right in.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🙏</div>
+          <h3>Prayer Journal</h3>
+          <p>Record prayer requests, mark answered prayers, set reminders, and track your prayer life over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div style="text-align:center">
+        <div class="section-eyebrow">Transparent Pricing</div>
+        <h2>Plans for Every Calling</h2>
+      </div>
+      <div class="pricing-grid">
+        <div class="plan-card">
+          <div class="plan-name">Seeker · Free</div>
+          <div class="plan-price">$0<span>/mo</span></div>
+          <div class="plan-period">Forever free · No card needed</div>
+          <ul class="plan-features">
+            <li>Full KJV & WEB Bible</li>
+            <li>Basic study lessons</li>
+            <li>10 AI questions per day</li>
+            <li>Up to 50 notes</li>
+            <li>Daily devotional</li>
+            <li class="off">Sermon builder</li>
+            <li class="off">Greek/Hebrew tools</li>
+          </ul>
+          <a href="signup.html" class="btn btn-secondary btn-full">Get Started Free</a>
+        </div>
+
+        <div class="plan-card featured">
+          <div class="plan-badge">Most Popular</div>
+          <div class="plan-name">Disciple · Premium</div>
+          <div class="plan-price">$9<span>/mo</span></div>
+          <div class="plan-period">Billed annually · $108/yr</div>
+          <ul class="plan-features">
+            <li>All Bible translations</li>
+            <li>Unlimited AI assistant</li>
+            <li>Full study library</li>
+            <li>Unlimited notes</li>
+            <li>Prayer journal</li>
+            <li>Greek & Hebrew lexicon</li>
+            <li>Courses & certificates</li>
+          </ul>
+          <a href="signup.html" class="btn btn-primary btn-full">Start 14-Day Trial</a>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-name">Pastor Plan</div>
+          <div class="plan-price">$24<span>/mo</span></div>
+          <div class="plan-period">Everything in Disciple, plus:</div>
+          <ul class="plan-features">
+            <li>AI Sermon Builder</li>
+            <li>Export to PDF</li>
+            <li>Sermon series organizer</li>
+            <li>Commentary access</li>
+            <li>Priority support</li>
+            <li>Teaching handouts</li>
+          </ul>
+          <a href="signup.html" class="btn btn-secondary btn-full">Start Pastor Trial</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="cta-band">
+    <h2>Begin Your Journey Into Scripture</h2>
+    <p>"Thy word is a lamp unto my feet, and a light unto my path." — Psalm 119:105</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a href="signup.html" class="btn btn-primary btn-lg">Create Your Free Account</a>
+      <a href="login.html"  class="btn btn-secondary btn-lg">Sign In</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="index.html" class="footer-logo">
+      <div class="nav-logo-icon">✝</div>
+      The Shepherd's Library
+    </a>
+    <ul class="footer-links">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Use</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <small>© 2026 The Shepherd's Library · Built for the Glory of God</small>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script>
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
